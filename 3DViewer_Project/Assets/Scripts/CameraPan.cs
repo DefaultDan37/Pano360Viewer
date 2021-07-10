@@ -16,11 +16,6 @@ public class CameraPan : MonoBehaviour
 #endif
 
     /// <summary>
-    /// boolean variable used to toggle platform dependent methods such as the OnPan()
-    /// </summary>
-    protected bool isAndroidDevice = true;
-
-    /// <summary>
     /// Text UI element array:
     /// Used for updating the onscreen axis coordinates with the current rotation of the transform attached.
     /// size = 3.
@@ -84,6 +79,7 @@ public class CameraPan : MonoBehaviour
     [Range(0, 10)]
     protected float rotationSpeed = 1;
 
+#if UNITY_ANDROID
 
     private void Awake()
     {
@@ -100,8 +96,11 @@ public class CameraPan : MonoBehaviour
         controlScheme.Disable();
     }
 
+#endif
+
     void Start()
     {
+
 #if UNITY_ANDROID
 
         //Subscribe OnTouch() method to TouchPress input.
