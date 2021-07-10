@@ -225,9 +225,6 @@ public class CameraPan : MonoBehaviour
     {
         Vector2 inputVec = input.Get<Vector2>();
 
-        Debug.Log(Vector2.x);
-        Debug.Log(Vector2.y);
-
         transform.Rotate(0f, inputVec.x * rotationSpeed, 0f, Space.World);
         transform.Rotate(-inputVec.y * rotationSpeed, 0f, 0f, Space.Self);
 
