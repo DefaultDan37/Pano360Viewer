@@ -79,13 +79,25 @@ public class CameraPan : MonoBehaviour
     [Range(0, 10)]
     protected float rotationSpeed = 1;
 
-#if UNITY_ANDROID
-
     private void Awake()
     {
+#if UNITY_EDITOR_WIN
+        if ((axis_valueArray != null) || (axis_valueArray.Length > 0))
+        {
+            for (int i = 0; i < axis_valueArray.Length; i++)
+            {
+                axis_valueArray[i].gameObject.SetActive(true);
+            }
+        }
+#endif
+
+#if UNITY_ANDROID
         controlScheme = new ControlScheme();
+    
+#endif
     }
 
+#if UNITY_ANDROID
     private void OnEnable()
     {
         controlScheme.Enable();
@@ -125,6 +137,7 @@ public class CameraPan : MonoBehaviour
             // Updates the Quaternion with the camera's current transform rotation values.
             rotation = mainCamera.transform.rotation;
         }
+ #if UNITY_EDITOR_WIN
 
         float xf = rotation.eulerAngles.x;
         float yf = rotation.eulerAngles.y;
@@ -160,6 +173,8 @@ public class CameraPan : MonoBehaviour
                 axis_valueArray[i].text = strArray[i];
             }
         }
+
+        #endif
     }
 
 
