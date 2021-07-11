@@ -212,8 +212,25 @@ public class CameraPan : MonoBehaviour
         x = v.x;
         y = v.y;
 
-
         // Normalises x and y values to either -1, 0 or 1
+        if (x < (Screen.width / 2) + 200)
+        {
+            x = 0;
+        }
+        else if (x > (Screen.width / 2) - 200)
+        {
+            x = 0;
+        }
+
+        if (y < (Screen.width / 2) + 200)
+        {
+            y = 0;
+        }
+        else if (y > (Screen.width / 2) - 200)
+        {
+            y = 0;
+        }
+
         if (x > (Screen.width / 2))
         {
             x = 1;
@@ -222,6 +239,7 @@ public class CameraPan : MonoBehaviour
         {
             x = -1;
         }
+        
 
         if (y > (Screen.height / 2))
         {
