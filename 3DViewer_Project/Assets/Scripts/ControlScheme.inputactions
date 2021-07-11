@@ -22,6 +22,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "TouchRelease",
+                    "type": "PassThrough",
+                    "id": "5bbe9e06-48ca-4062-99f9-183afbbc2bfd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "TouchPosition",
                     "type": "PassThrough",
                     "id": "30b33787-d346-49a7-bb1a-05492ac5860b",
@@ -105,6 +113,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "TouchPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f3c7746-2722-4a9d-9cd6-e009d3c50994",
+                    "path": "<Touchscreen>/primaryTouch/press",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchRelease",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

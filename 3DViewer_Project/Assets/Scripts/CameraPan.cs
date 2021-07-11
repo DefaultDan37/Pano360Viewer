@@ -13,6 +13,8 @@ public class CameraPan : MonoBehaviour
 
     protected ControlScheme controlScheme;
 
+    protected bool isTouchHolding = false;
+
 #endif
 
     /// <summary>
@@ -93,7 +95,6 @@ public class CameraPan : MonoBehaviour
 
 #if UNITY_ANDROID
         controlScheme = new ControlScheme();
-    
 #endif
     }
 
@@ -101,11 +102,14 @@ public class CameraPan : MonoBehaviour
     private void OnEnable()
     {
         controlScheme.Enable();
+
+
     }
 
     private void OnDisable()
     {
         controlScheme.Disable();
+
     }
 
 #endif
@@ -115,8 +119,10 @@ public class CameraPan : MonoBehaviour
 
 #if UNITY_ANDROID
 
-        //Subscribe OnTouch() method to TouchPress input.
+
+        ////Subscribe OnTouch() method to TouchPress input.
         controlScheme.Player.TouchPress.started += ctx => OnTouch(ctx);
+        controlScheme.Player.TouchRelease.performed += ctx => OnRelease(ctx);
 
 #endif
         // Searches for a reference to the camera component this script is attached to.
@@ -137,7 +143,7 @@ public class CameraPan : MonoBehaviour
             // Updates the Quaternion with the camera's current transform rotation values.
             rotation = mainCamera.transform.rotation;
         }
- #if UNITY_EDITOR_WIN
+#if UNITY_EDITOR_WIN
 
         float xf = rotation.eulerAngles.x;
         float yf = rotation.eulerAngles.y;
@@ -174,22 +180,37 @@ public class CameraPan : MonoBehaviour
             }
         }
 
-        #endif
+#endif
+
+#if UNITY_ANDROID
+
+        if (isTouchHolding)
+        {
+           Vector2 v = NormalisePoints(controlScheme.Player.TouchPosition.ReadValue<Vector2>());
+
+            // rotatates the y axis of the transform in x direction in World space, * rotationSpeed.
+            transform.Rotate(0f, v.x * rotationSpeed * 0.1f, 0f, Space.World);
+
+            // rotates the x axis of the transform in y direction in Local space, * rotationSpeed.
+            transform.Rotate(-v.y * rotationSpeed * 0.1f, 0f, 0f, Space.Self);
+        }
+
+
+#endif
+
     }
+    
 
 
 #if UNITY_ANDROID
 
-    private void OnTouch(InputAction.CallbackContext context)
+    public Vector2 NormalisePoints(Vector2 v)
     {
-        // Reads the position value of the primaryTouch as Vector2 touchedPos
-        Vector2 touchedPos = controlScheme.Player.TouchPosition.ReadValue<Vector2>();
-
         float x = 0;
         float y = 0;
 
-        x = touchedPos.x;
-        y = touchedPos.y;
+        x = v.x;
+        y = v.y;
 
 
         // Normalises x and y values to either -1, 0 or 1
@@ -211,11 +232,34 @@ public class CameraPan : MonoBehaviour
             y = -1;
         }
 
-        // rotatates the y axis of the transform in x direction in World space, * rotationSpeed.
-        transform.Rotate(0f, x * rotationSpeed, 0f, Space.World);
+        return new Vector2(x, y);
+    }
 
-        // rotates the x axis of the transform in y direction in Local space, * rotationSpeed.
-        transform.Rotate(-y * rotationSpeed, 0f, 0f, Space.Self);
+
+    private void OnTouch(InputAction.CallbackContext context)
+    {
+        isTouchHolding = true;
+
+            OnRelease(context);
+
+            // Reads the position value of the primaryTouch as Vector2 touchedPos
+            Vector2 touchedPos = NormalisePoints(controlScheme.Player.TouchPosition.ReadValue<Vector2>());
+
+            // rotatates the y axis of the transform in x direction in World space, * rotationSpeed.
+            transform.Rotate(0f, touchedPos.x * rotationSpeed, 0f, Space.World);
+
+            // rotates the x axis of the transform in y direction in Local space, * rotationSpeed.
+            transform.Rotate(-touchedPos.y * rotationSpeed, 0f, 0f, Space.Self);
+
+    }
+
+    private void OnRelease(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            isTouchHolding = false;
+        }
+
     }
 
 #endif
@@ -246,4 +290,5 @@ public class CameraPan : MonoBehaviour
     }
 
 #endif
+
 }

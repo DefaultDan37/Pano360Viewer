@@ -35,6 +35,14 @@ public class @ControlScheme : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""TouchRelease"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""5bbe9e06-48ca-4062-99f9-183afbbc2bfd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""TouchPosition"",
                     ""type"": ""PassThrough"",
                     ""id"": ""30b33787-d346-49a7-bb1a-05492ac5860b"",
@@ -120,6 +128,17 @@ public class @ControlScheme : IInputActionCollection, IDisposable
                     ""action"": ""TouchPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f3c7746-2722-4a9d-9cd6-e009d3c50994"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchRelease"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -191,6 +210,7 @@ public class @ControlScheme : IInputActionCollection, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Pan = m_Player.FindAction("Pan", throwIfNotFound: true);
         m_Player_TouchPress = m_Player.FindAction("TouchPress", throwIfNotFound: true);
+        m_Player_TouchRelease = m_Player.FindAction("TouchRelease", throwIfNotFound: true);
         m_Player_TouchPosition = m_Player.FindAction("TouchPosition", throwIfNotFound: true);
     }
 
@@ -243,6 +263,7 @@ public class @ControlScheme : IInputActionCollection, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Pan;
     private readonly InputAction m_Player_TouchPress;
+    private readonly InputAction m_Player_TouchRelease;
     private readonly InputAction m_Player_TouchPosition;
     public struct PlayerActions
     {
@@ -250,6 +271,7 @@ public class @ControlScheme : IInputActionCollection, IDisposable
         public PlayerActions(@ControlScheme wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pan => m_Wrapper.m_Player_Pan;
         public InputAction @TouchPress => m_Wrapper.m_Player_TouchPress;
+        public InputAction @TouchRelease => m_Wrapper.m_Player_TouchRelease;
         public InputAction @TouchPosition => m_Wrapper.m_Player_TouchPosition;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -266,6 +288,9 @@ public class @ControlScheme : IInputActionCollection, IDisposable
                 @TouchPress.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchPress;
                 @TouchPress.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchPress;
                 @TouchPress.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchPress;
+                @TouchRelease.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchRelease;
+                @TouchRelease.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchRelease;
+                @TouchRelease.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchRelease;
                 @TouchPosition.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchPosition;
                 @TouchPosition.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchPosition;
                 @TouchPosition.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTouchPosition;
@@ -279,6 +304,9 @@ public class @ControlScheme : IInputActionCollection, IDisposable
                 @TouchPress.started += instance.OnTouchPress;
                 @TouchPress.performed += instance.OnTouchPress;
                 @TouchPress.canceled += instance.OnTouchPress;
+                @TouchRelease.started += instance.OnTouchRelease;
+                @TouchRelease.performed += instance.OnTouchRelease;
+                @TouchRelease.canceled += instance.OnTouchRelease;
                 @TouchPosition.started += instance.OnTouchPosition;
                 @TouchPosition.performed += instance.OnTouchPosition;
                 @TouchPosition.canceled += instance.OnTouchPosition;
@@ -335,6 +363,7 @@ public class @ControlScheme : IInputActionCollection, IDisposable
     {
         void OnPan(InputAction.CallbackContext context);
         void OnTouchPress(InputAction.CallbackContext context);
+        void OnTouchRelease(InputAction.CallbackContext context);
         void OnTouchPosition(InputAction.CallbackContext context);
     }
 }
